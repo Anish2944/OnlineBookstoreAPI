@@ -8,6 +8,7 @@ namespace onlineBookstoreAPI.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
+        public DbSet<User> Users => Set<User>();
         public DbSet<Book> Books => Set<Book>();
         public DbSet<Author> Authors => Set<Author>();
         public DbSet<Category> Categories => Set<Category>();
@@ -17,6 +18,16 @@ namespace onlineBookstoreAPI.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Seed();
+            // ✅ Ensure all tables use PascalCase names
+            foreach (var entity in modelBuilder.Model.GetEntityTypes())
+            {
+                var tableName = entity.GetTableName();
+                if (!string.IsNullOrEmpty(tableName))
+                {
+                    entity.SetTableName(char.ToUpper(tableName[0]) + tableName.Substring(1));
+                }
+            }
             // Configure relationships and constraints if needed
             modelBuilder.Entity<Book>()
                 .HasOne(b => b.Author)
@@ -37,6 +48,22 @@ namespace onlineBookstoreAPI.Data
                 .HasOne(oi => oi.Book)
                 .WithMany()
                 .HasForeignKey(oi => oi.BookId);
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Username)
+                .IsUnique();
+            modelBuilder.Entity<Book>()
+                .Property(b => b.Price)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Order>()
+                .Property(o => o.TotalAmount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<OrderItem>()
+                .Property(oi => oi.UnitPrice)
+                .HasPrecision(18, 2);
+
+
         }
     }
 }
