@@ -48,9 +48,6 @@ namespace onlineBookstoreAPI.Data
                 .HasOne(oi => oi.Book)
                 .WithMany()
                 .HasForeignKey(oi => oi.BookId);
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Username)
-                .IsUnique();
             modelBuilder.Entity<Book>()
                 .Property(b => b.Price)
                 .HasPrecision(18, 2);

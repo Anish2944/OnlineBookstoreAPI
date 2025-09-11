@@ -11,9 +11,9 @@ namespace onlineBookstoreAPI.Data
         {
             // --- Users ---
             modelBuilder.Entity<User>().HasData(
-                new User { Id = 1, Username = "admin", PasswordHash = "$2a$11$wQiGuG4trZtFqvbbYZ3RkOJROqEwlJ42Zm9qN3.Q/Rh2L/3K9Se4C\r\n", Role = "Admin" },
-                new User { Id = 2, Username = "alice", PasswordHash = "$2a$11$LglINfhxwA3BzR5B7pKzWemWgxIxjVpvM8OAy1M0wFoB9PH7COH1K\r\n", Role = "User" },
-                new User { Id = 3, Username = "bob", PasswordHash = "$2a$11$LglINfhxwA3BzR5B7pKzWemWgxIxjVpvM8OAy1M0wFoB9PH7COH1K\r\n", Role = "User" }
+                new User { Id = 1, Name = "admin",Email="admin@example.com", PasswordHash = "$2a$11$wQiGuG4trZtFqvbbYZ3RkOJROqEwlJ42Zm9qN3.Q/Rh2L/3K9Se4C\r\n", Role = "Admin" },
+                new User { Id = 2, Name = "alice", Email = "alice@example.com", PasswordHash = "$2a$11$LglINfhxwA3BzR5B7pKzWemWgxIxjVpvM8OAy1M0wFoB9PH7COH1K\r\n", Role = "User" },
+                new User { Id = 3, Name = "bob", Email = "bob@example.com", PasswordHash = "$2a$11$LglINfhxwA3BzR5B7pKzWemWgxIxjVpvM8OAy1M0wFoB9PH7COH1K\r\n", Role = "User" }
             );
 
             // --- Authors ---
