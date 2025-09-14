@@ -71,10 +71,35 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Me()
     {
         var id = User.GetUserId();
+        if (!User.Identity?.IsAuthenticated ?? false)
+        {
+            return Unauthorized(new { message = "Token not authenticated" });
+        }
+
         if (id is null) return Unauthorized(new ApiResponse<object>(false, null, "Not logged in"));
         var user = await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
         if (user is null) return Unauthorized(new ApiResponse<object>(false, null, "User not found"));
 
         return Ok(new ApiResponse<object>(true, new { user.Id, user.Name, user.Email, user.Role }));
     }
+    //[HttpGet("debug-token")]
+    //public IActionResult DebugToken()
+    //{
+    //    var auth = Request.Headers["Authorization"].FirstOrDefault();
+    //    if (string.IsNullOrEmpty(auth)) return Ok(new { authHeader = auth, message = "no header" });
+
+    //    if (!auth.StartsWith("Bearer ")) return Ok(new { authHeader = auth, message = "header not start with 'Bearer '" });
+
+    //    var raw = auth.Substring("Bearer ".Length).Trim();
+    //    var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+    //    var jwt = handler.ReadJwtToken(raw);
+    //    return Ok(new
+    //    {
+    //        header = jwt.Header,
+    //        payload = jwt.Payload,
+    //        authHeader = auth,
+    //        tokenLength = raw.Length
+    //    });
+    //}
+
 }

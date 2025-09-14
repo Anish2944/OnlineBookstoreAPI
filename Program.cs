@@ -30,8 +30,9 @@ builder.Services.AddSwaggerGen(c =>
         Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
         Name = "Authorization",
         In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -69,17 +70,60 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
+//.AddJwtBearer(options =>
+//{
+//    options.TokenValidationParameters = new TokenValidationParameters
+//    {
+//        ValidateIssuer = true,
+//        ValidateAudience = true,
+//        ValidateLifetime = true,
+//        ValidateIssuerSigningKey = true,
+//        ValidIssuer = configuration["Jwt:Issuer"],
+//        ValidAudience = configuration["Jwt:Audience"],
+//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+//    };
+//});
 .AddJwtBearer(options =>
 {
+    options.RequireHttpsMetadata = false; // for dev only
+    options.SaveToken = true;
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
-        ValidateAudience = true,
+        ValidateAudience = true,             // you already tried false — keep for debugging
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = configuration["Jwt:Issuer"],
-        ValidAudience = configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+        ValidAudience = configuration["Jwt:Audience"], // intentionally omitted for now
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+        ClockSkew = TimeSpan.Zero            // avoid hiding expiry issues
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = ctx =>
+        {
+            var authHeader = ctx.Request.Headers["Authorization"].FirstOrDefault();
+            Console.WriteLine($"[JWT DEBUG] OnMessageReceived Authorization header: '{authHeader}'");
+            return Task.CompletedTask;
+        },
+        OnAuthenticationFailed = ctx =>
+        {
+            Console.WriteLine($"[JWT DEBUG] OnAuthenticationFailed: {ctx.Exception?.GetType().Name}: {ctx.Exception?.Message}");
+            if (ctx.Exception?.InnerException != null)
+                Console.WriteLine($"[JWT DEBUG] InnerException: {ctx.Exception.InnerException.Message}");
+            return Task.CompletedTask;
+        },
+        OnTokenValidated = ctx =>
+        {
+            Console.WriteLine("[JWT DEBUG] OnTokenValidated: token validated successfully.");
+            foreach (var c in ctx.Principal!.Claims)
+            {
+                Console.WriteLine($"[JWT CLAIM] {c.Type} = {c.Value}");
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 

@@ -5,16 +5,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-public class JwtService
+public class JwtService(IConfiguration config)
 {
-    private readonly string _secret;
-    private readonly string _issuer;
-
-    public JwtService(IConfiguration config)
-    {
-        _secret = config["Jwt:Key"]!;
-        _issuer = config["Jwt:Issuer"]!;
-    }
+    private readonly string _secret = config["Jwt:Key"]!;
+    private readonly string _issuer = config["Jwt:Issuer"]!;
+    private readonly string _configuration = config["Jwt:Audience"]!;
 
     public string GenerateToken(User user)
     {
@@ -26,11 +21,11 @@ public class JwtService
 
         var token = new JwtSecurityToken(
             issuer: _issuer,
-            audience: null, // You may want to add an _audience field if needed
+            audience: _configuration, 
             claims: new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role ?? ""),
                 new Claim(ClaimTypes.Name, user.Name ?? "")
             },
