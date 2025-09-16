@@ -11,6 +11,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
 
+//CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp",
+        policy => policy
+            .WithOrigins("http://localhost:4200")  // 👈 allow Angular dev server
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+    );
+});
 
 builder.Services.AddControllers();
 
@@ -136,6 +146,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseStaticFiles();
+app.UseCors("AllowAngularApp");
 app.UseHttpsRedirection();
 
 app.UseAuthentication(); // 🔑 Must come before Authorization
