@@ -17,4 +17,5 @@ WORKDIR /app
 COPY --from=build /app/publish .
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080
-ENTRYPOINT ["dotnet", "OnlineBookstoreAPI.dll"]
+# auto detect .dll file
+ENTRYPOINT ["sh", "-c", "dotnet $(ls *.dll | head -n 1)"]
