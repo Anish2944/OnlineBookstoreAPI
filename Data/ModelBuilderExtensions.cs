@@ -32,9 +32,9 @@ namespace onlineBookstoreAPI.Data
 
             // --- Books ---
             modelBuilder.Entity<Book>().HasData(
-                new Book { Id = 1, Title = "1984", Description = "Dystopian novel", Price = 9.99m, Stock = 100, ImageUrl = "/images/1984.jpg", Created = new DateTime(2025, 05, 12), AuthorId = 1, CategoryId = 1 },
-                new Book { Id = 2, Title = "A Brief History of Time", Description = "Cosmology explained", Price = 15.50m, Stock = 50, ImageUrl = "/images/brief_history.jpg", Created = new DateTime(2025, 05, 12), AuthorId = 2, CategoryId = 2 },
-                new Book { Id = 3, Title = "Sapiens", Description = "History of humankind", Price = 18.99m, Stock = 75, ImageUrl = "/images/sapiens.jpg", Created = new DateTime(2025, 05, 10), AuthorId = 3, CategoryId = 3 }
+                new Book { Id = 1, Title = "1984", Description = "Dystopian novel", Price = 9.99m, Stock = 100, ImageUrl = "https://tse4.mm.bing.net/th/id/OIP.s-upM5SIYvp6QxN-naltXQHaLH?rs=1&pid=ImgDetMain&o=7&rm=3", Created = new DateTime(2025, 05, 12), AuthorId = 1, CategoryId = 1 },
+                new Book { Id = 2, Title = "A Brief History of Time", Description = "Cosmology explained", Price = 15.50m, Stock = 50, ImageUrl = "https://pictures.abebooks.com/isbn/9780593043165-uk.jpg", Created = new DateTime(2025, 05, 12), AuthorId = 2, CategoryId = 2 },
+                new Book { Id = 3, Title = "Sapiens", Description = "History of humankind", Price = 18.99m, Stock = 75, ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Sapiens-_A_Brief_History_of_Humankind.png/800px-Sapiens-_A_Brief_History_of_Humankind.png", Created = new DateTime(2025, 05, 10), AuthorId = 3, CategoryId = 3 }
             );
 
             // --- Orders ---
