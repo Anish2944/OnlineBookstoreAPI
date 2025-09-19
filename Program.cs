@@ -140,11 +140,14 @@ builder.Services.AddAuthentication(options =>
 var app = builder.Build();
 
 // --- Configure middleware ---
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// if (app.Environment.IsDevelopment())
+// {
+//     app.UseSwagger();
+//     app.UseSwaggerUI();
+// }
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseStaticFiles();
 app.UseCors("AllowAngularApp");
 app.UseHttpsRedirection();
