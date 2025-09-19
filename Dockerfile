@@ -8,8 +8,7 @@ RUN dotnet restore
 
 # copy everything else and build
 COPY . .
-WORKDIR /src
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet publish onlineBookstoreAPI.csproj -c Release -o /app/publish
 
 #Satge 2: RUN
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
@@ -17,5 +16,4 @@ WORKDIR /app
 COPY --from=build /app/publish .
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080
-# auto detect .dll file
-ENTRYPOINT ["sh", "-c", "dotnet $(ls *.dll | head -n 1)"]
+ENTRYPOINT ["dotnet", "onlineBookstoreAPI.dll"]
