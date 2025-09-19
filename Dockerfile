@@ -3,13 +3,12 @@ From mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
 # copy csproj & restore
-COPY *.sln .
-COPY OnlineBookstoreAPI/*.csproj ./OnlineBookstoreAPI/
+COPY *.csproj ./
 RUN dotnet restore
 
 # copy everything else and build
 COPY . .
-WORKDIR /src/OnlineBookstoreAPI
+WORKDIR /src
 RUN dotnet publish -c Release -o /app/publish
 
 #Satge 2: RUN
